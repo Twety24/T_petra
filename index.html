@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>فريق T-petra</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Kufi+Arabic:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F1E7; --ink:#4A1424; --gold:#9A7424; --muted:#7a5560;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#3A0F1D;--ink:#F4EBDD;--gold:#D9B25F;--muted:#CDB6B6;}
+}
+:root[data-theme="dark"]{--bg:#3A0F1D;--ink:#F4EBDD;--gold:#D9B25F;--muted:#CDB6B6;}
+*{box-sizing:border-box}
+html{height:100%}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:'Amiri','Noto Naskh Arabic',serif;display:flex;flex-direction:column}
+.brand{padding:22px 24px;font-family:'Noto Kufi Arabic',system-ui,sans-serif;font-weight:700;font-size:1.05rem;color:var(--gold);letter-spacing:.04em;direction:ltr;text-align:center}
+main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 22px 56px}
+.cross{width:54px;height:auto;color:var(--gold);margin-bottom:28px;animation:rise 1.2s ease both}
+h1{font-family:'Noto Kufi Arabic',system-ui,sans-serif;font-weight:700;font-size:clamp(1.9rem,6.2vw,3.6rem);line-height:1.55;margin:0;max-width:18ch;animation:rise 1.4s .25s ease both}
+.verse{margin-top:44px;animation:rise 1.4s .9s ease both}
+.verse q{display:block;font-size:clamp(1.6rem,4.6vw,2.4rem);line-height:1.8;color:var(--gold);quotes:none}
+.verse span{display:block;margin-top:6px;font-size:1.05rem;color:var(--muted)}
+footer{padding:18px 24px;text-align:center;font-size:.95rem;color:var(--muted);direction:ltr}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="brand">T-petra</div>
+<main>
+  <svg class="cross" viewBox="0 0 40 60" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true">
+    <path d="M20 4v52M6 20h28"/>
+  </svg>
+  <h1>أنت مش محتاج أي اتصال غير الاتصال بالمسيح</h1>
+  <div class="verse">
+    <q id="verse"></q>
+    <span id="ref"></span>
+  </div>
+</main>
+<footer>فريق T-petra</footer>
+<script>
+const verses=[
+{t:"اُثْبُتُوا فِيَّ وَأَنَا فِيكُمْ",r:"يوحنا ١٥: ٤"},
+{t:"أستطيع كل شيء في المسيح الذي يقويني.",r:"فيلبي 4:13"},
+{t:"الرب راعيّ فلا يعوزني شيء.",r:"مزمور 23:1"},
+{t:"لأنه هكذا أحب الله العالم حتى بذل ابنه الوحيد، لكي لا يهلك كل من يؤمن به بل تكون له الحياة الأبدية.",r:"يوحنا 3:16"},
+{t:"توكل على الرب بكل قلبك، وعلى فهمك لا تعتمد.",r:"أمثال 3:5"},
+{t:"لا تخف لأني معك. لا تتلفت لأني إلهك. قد أيدتك وأعنتك وعضدتك بيمين بري.",r:"إشعياء 41:10"},
+{t:"الله لنا ملجأ وقوة، عونًا في الضيقات وُجد شديدًا.",r:"مزمور 46:1"},
+{t:"تعالوا إليّ يا جميع المتعبين والثقيلي الأحمال وأنا أريحكم.",r:"متى 11:28"},
+{t:"ونحن نعلم أن كل الأشياء تعمل معًا للخير للذين يحبون الله، الذين هم مدعوون حسب قصده.",r:"رومية 8:28"},
+{t:"تشدد وتشجع. لا ترهب ولا ترتعب، لأن الرب إلهك معك حيثما تذهب.",r:"يشوع 1:9"},
+{t:"الرب نوري وخلاصي، ممن أخاف؟ الرب حصن حياتي، ممن أرتعب؟",r:"مزمور 27:1"},
+{t:"لأني عرفت الأفكار التي أنا مفتكر بها عنكم، يقول الرب، أفكار سلام لا شر، لأعطيكم آخرة ورجاء.",r:"إرميا 29:11"},
+{t:"لكن اطلبوا أولًا ملكوت الله وبره، وهذه كلها تزاد لكم.",r:"متى 6:33"},
+{t:"سلامًا أترك لكم. سلامي أعطيكم. ليس كما يعطي العالم أعطيكم أنا. لا تضطرب قلوبكم ولا ترهب.",r:"يوحنا 14:27"},
+{t:"أرفع عينيّ إلى الجبال من حيث يأتي عوني. معونتي من عند الرب صانع السماوات والأرض.",r:"مزمور 121:1-2"},
+{t:"ولا تشاكلوا هذا الدهر، بل تغيروا عن شكلكم بتجديد أذهانكم.",r:"رومية 12:2"},
+{t:"أما الآن فيثبت الإيمان والرجاء والمحبة، هذه الثلاثة، ولكن أعظمهم المحبة.",r:"1 كورنثوس 13:13"},
+{t:"وأما ثمر الروح فهو: محبة، فرح، سلام، طول أناة، لطف، صلاح، إيمان، وداعة، تعفف.",r:"غلاطية 5:22-23"},
+{t:"لأنكم بالنعمة مخلصون، بالإيمان، وذلك ليس منكم. هو عطية الله.",r:"أفسس 2:8"},
+{t:"لأن الله لم يعطنا روح الفشل، بل روح القوة والمحبة والنصح.",r:"2 تيموثاوس 1:7"},
+{t:"سراج لرجلي كلامك، ونور لسبيلي.",r:"مزمور 119:105"},
+{t:"فليضئ نوركم هكذا قدام الناس، لكي يروا أعمالكم الحسنة ويمجدوا أباكم الذي في السماوات.",r:"متى 5:16"},
+{t:"أنا هو نور العالم. من يتبعني فلا يمشي في الظلمة، بل يكون له نور الحياة.",r:"يوحنا 8:12"},
+{t:"أنا هو الطريق والحق والحياة. ليس أحد يأتي إلى الآب إلا بي.",r:"يوحنا 14:6"},
+{t:"وتلذذ بالرب فيعطيك سؤل قلبك.",r:"مزمور 37:4"},
+{t:"ألق على الرب أعمالك فتثبت أفكارك.",r:"أمثال 16:3"},
+{t:"ملقين كل همكم عليه، لأنه هو يعتني بكم.",r:"1 بطرس 5:7"},
+{t:"لا تهتموا بشيء، بل في كل شيء بالصلاة والدعاء مع الشكر لتعلم طلباتكم لدى الله.",r:"فيلبي 4:6"},
+{t:"وأما الإيمان فهو الثقة بما يرجى، والإيقان بأمور لا ترى.",r:"عبرانيين 11:1"},
+{t:"اسألوا تعطوا. اطلبوا تجدوا. اقرعوا يفتح لكم.",r:"متى 7:7"},
+{t:"الساكن في ستر العلي، في ظل القدير يبيت.",r:"مزمور 91:1"},
+{t:"وأما منتظرو الرب فيجددون قوة. يرفعون أجنحة كالنسور. يركضون ولا يتعبون. يمشون ولا يعيون.",r:"إشعياء 40:31"},
+{t:"إن كان الله معنا فمن علينا؟",r:"رومية 8:31"},
+{t:"ومن لا يحب لم يعرف الله، لأن الله محبة.",r:"1 يوحنا 4:8"},
+{t:"نحن نحبه لأنه هو أحبنا أولًا.",r:"1 يوحنا 4:19"},
+{t:"وإنما إن كان أحدكم تعوزه حكمة، فليطلب من الله الذي يعطي الجميع بسخاء ولا يعير، فسيعطى له.",r:"يعقوب 1:5"},
+{t:"ذوقوا وانظروا ما أطيب الرب. طوبى للرجل المتوكل عليه.",r:"مزمور 34:8"},
+{t:"وكل ما عملتم فاعملوا من القلب كما للرب ليس للناس.",r:"كولوسي 3:23"},
+{t:"وها أنا معكم كل الأيام إلى انقضاء الدهر.",r:"متى 28:20"},
+{t:"السماوات تحدث بمجد الله، والفلك يخبر بعمل يديه.",r:"مزمور 19:1"},
+{t:"رب الولد في طريقه، فمتى شاخ أيضًا لا يحيد عنه.",r:"أمثال 22:6"},
+{t:"افرحوا كل حين. صلوا بلا انقطاع. اشكروا في كل شيء.",r:"1 تسالونيكي 5:16-18"},
+{t:"وصية جديدة أنا أعطيكم: أن تحبوا بعضكم بعضًا. كما أحببتكم أنتم تحبون بعضكم بعضًا.",r:"يوحنا 13:34"},
+{t:"هذا هو اليوم الذي صنعه الرب. فلنبتهج ونفرح فيه.",r:"مزمور 118:24"},
+{t:"لأنه ليس شيء غير ممكن لدى الله.",r:"لوقا 1:37"},
+{t:"إن كنت تستطيع أن تؤمن، فكل شيء مستطاع للمؤمن.",r:"مرقس 9:23"},
+{t:"تكفيك نعمتي، لأن قوتي في الضعف تكمل.",r:"2 كورنثوس 12:9"},
+{t:"اسم الرب برج حصين، يركض إليه الصديق ويتمنع.",r:"أمثال 18:10"},
+{t:"جعلت الرب أمامي في كل حين، لأنه عن يميني فلا أتزعزع.",r:"مزمور 16:8"},
+{t:"طوبى لصانعي السلام، لأنهم أبناء الله يدعون.",r:"متى 5:9"}
+];
+let last=-1;
+try{
+last=Number(localStorage.getItem("lastVerse"));
+}catch(e){
+last=-1;
+}
+let i=Math.floor(Math.random()*verses.length);
+while(i==last){
+i=Math.floor(Math.random()*verses.length);
+}
+try{
+localStorage.setItem("lastVerse",i);
+}catch(e){
+last=-1;
+}
+document.getElementById("verse").textContent=verses[i].t;
+document.getElementById("ref").textContent=verses[i].r;
+</script>
+</body>
+</html>
